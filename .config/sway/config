@@ -50,19 +50,15 @@ set $menu dmenu_path | dmenu | xargs swaymsg exec
 #exec --no-startup-id xset s off
 #exec --no-startup-id xset -dpms
 #exec --no-startup-id xset s noblank
-output * bg ~/Pictures/wall* fill
+
+# azote wallpaper
+exec ~/.azote
 
 #Music player daemon:
 exec_always --no-startup-id mpd
 
-#Firefox Newtab page
-#exec_always --no-startup-id /home/netrunner/.config/scripts/firefox-newtab.sh
-
 # monitors
-output HDMI-A-1 mode 1280x1024@75.025002Hz  position 0 0 transform 270
-output DP-1 mode 1920x1080@143.996002Hz position 1024 0
-output DVI-D-1 mode 1280x1024@75.025002Hz position 2944 0 transform 270
-
+output DP-1 mode 1920x1080@143.996002Hz
 
 # #---Function Buttons---# #
 bindsym $mod+F1 exec mpc toggle
@@ -124,8 +120,6 @@ bindsym Ctrl+$mod+Right resize grow width 10 px or 10 ppt
 #
     # start a terminal
     bindsym $mod+Return exec $term
-    bindsym $mod+Shift+Return  workspace 1; exec $term
-
 
     # kill focused window
     bindsym $mod+Shift+q kill
@@ -133,7 +127,13 @@ bindsym Ctrl+$mod+Right resize grow width 10 px or 10 ppt
     # start your launcher
     bindsym $mod+d			    exec rofi -show drun -lines 12 -font "envypn 13"
 
+    #floating terminal
+    for_window [app_id="termfloat"] floating enable
+    for_window [app_id="termfloat"] resize set height 500
+    for_window [app_id="termfloat"] resize set width 900
+
     # #---Letter Key Bindings---# #
+    bindsym $mod+Shift+Return   exec $term --class="termfloat"
     bindsym $mod+q		  	    kill
     bindsym $mod+w			    exec gaps inner current set 0; gaps outer current set 0
     bindsym $mod+Shift+w		workspace 1; exec $term -e weechat
@@ -141,11 +141,8 @@ bindsym Ctrl+$mod+Right resize grow width 10 px or 10 ppt
     bindsym $mod+Shift+e        workspace 4; exec nemo
     bindsym $mod+r 			    exec $term -e ranger
     bindsym $mod+i 			    exec $term -e htop
-    bindsym $mod+o			    sticky toggle
     bindsym $mod+Shift+p		workspace 9; exec pavucontrol
-    bindsym $mod+a			    workspace 7; exec --no-startup-id virt-manager
     bindsym $mod+Shift+a		workspace 3; exec --no-startup-id atom
-    bindsym $mod+Shift+d        workspace 5; exec flatpak run com.discordapp.Discord
     bindsym $mod+f              fullscreen
     bindsym $mod+Shift+f		workspace 2; exec --no-startup-id $browser
     bindsym $mod+g			    workspace prev
@@ -155,7 +152,7 @@ bindsym Ctrl+$mod+Right resize grow width 10 px or 10 ppt
     bindsym $mod+Shift+r        exec swaynag -t warning -m 'Do you want to reboot?' -b 'Yes, reboot the machine' "reboot" 'swaymsg exit'
     bindsym $mod+c			    workspace 9 ;exec clementine
     bindsym $mod+Shift+c        workspace 1; exec $term -e calcurse
-    bindsym $mod+n		        workspace 1; exec $term -e newget
+    bindsym $mod+n		        exec --no-startup-id flash_window
     bindsym $mod+Shift+n        workspace 1; exec $term -e htop
     bindsym $mod+m 			    workspace 9; exec --no-startup-id $term -e ncmpcpp
     bindsym $mod+Shift+m	    exec --no-startup-id alacritty -e rtv
@@ -221,7 +218,6 @@ bindsym Ctrl+$mod+Right resize grow width 10 px or 10 ppt
 # Workspaces:
 #
     # switch to workspace
-
     bindsym $mod+1 workspace 1
     bindsym $mod+2 workspace 2
     bindsym $mod+3 workspace 3
@@ -330,13 +326,6 @@ exec_always {
     gsettings set $gnome-schema cursor-theme 'OSX-ElCap'
 }
 
-
-bar {
-  swaybar_command waybar -c ~/.config/waybar/top.config -s ~/.config/waybar/topstyles.css
-}
-bar {
-  swaybar_command waybar -c ~/.config/waybar/bottom.config -s ~/.config/waybar/bottomstyles.css
-}
 #bindsym $mod+r mode "resize"
 
 #
