@@ -35,12 +35,23 @@
     "reference": "\uf87a",
     "typeParameter": "\uf278",
     "default": "\uf29c"
-
- },
-
+  },
+  "coc.preferences.formatOnSaveFiletypes": ["css", "markdown", "vue", "js", "ts", "html"],
 "rust-analyzer.raLspServerPath": "~/.cargo/bin/ra_lsp_server",
-"rust-analyzer.trace.server": "messages",
-"rust-analyzer.enableCargoWatchOnStartup": "enabled"
+"rust-analyzer.enableCargoWatchOnStartup":"enabled",
+"languageserver": {
+    "ccls": {
+      "command": "ccls",
+      "filetypes": ["c", "cpp", "cuda", "objc", "objcpp"],
+      "rootPatterns": [".ccls-root", "compile_commands.json"],
+      "initializationOptions": {
+         "cache": {
+           "directory": ".ccls-cache"
+         }
+       }
+    }
+  }
+
+
+
 }
-
-
