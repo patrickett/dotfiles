@@ -1,37 +1,81 @@
+set shell=/bin/bash
+
 call plug#begin('~/.config/nvim/bundle')
 
-" rust
-Plug 'rust-lang/rust.vim'
-Plug 'rhysd/rust-doc.vim'
+"Center text
+Plug 'junegunn/goyo.vim'
+Plug 'junegunn/limelight.vim' 
+
+" fzf and file search
+Plug 'airblade/vim-rooter'
+Plug 'junegunn/fzf'
+Plug 'junegunn/fzf.vim'
 
 " vim features
 Plug 'mhinz/vim-startify'
-Plug 'vimlab/split-term.vim'
-Plug 'Xuyuanp/nerdtree-git-plugin'
-Plug 'airblade/vim-gitgutter'
-Plug 'scrooloose/nerdcommenter'
-Plug 'justinmk/vim-sneak'
 Plug 'flazz/vim-colorschemes'
-Plug 'easymotion/vim-easymotion'
-Plug 'ctrlpvim/ctrlp.vim' 
-Plug 'junegunn/fzf'
 Plug 'norcalli/nvim-colorizer.lua'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
+Plug 'scrooloose/nerdcommenter'
+Plug 'airblade/vim-gitgutter'
+"Plug 'vimlab/split-term.vim'
+"Plug 'Xuyuanp/nerdtree-git-plugin'
+"Plug 'justinmk/vim-sneak'
+"Plug 'easymotion/vim-easymotion'
 
-" syntax & autocompletion
-Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
-Plug 'scrooloose/syntastic'
+"Plug 'chiel92/vim-autoformat'
+
+" syntax
+Plug 'othree/javascript-libraries-syntax.vim'
+Plug 'leafoftree/vim-vue-plugin'
+Plug 'digitaltoad/vim-pug'
+Plug 'leafgarland/typescript-vim'
+
+"Plug 'dnitro/vim-pug-complete'
+"Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
+"Plug 'scrooloose/syntastic'
 
 Plug 'dense-analysis/ale'
 
+" Syntactic language support
+Plug 'cespare/vim-toml'
+Plug 'stephpy/vim-yaml'
+Plug 'rust-lang/rust.vim'
+Plug 'rhysd/vim-clang-format'
+"Plug 'fatih/vim-go'
+Plug 'dag/vim-fish'
+Plug 'godlygeek/tabular'
+Plug 'plasticboy/vim-markdown' 
+
 " js/ts/vue/html/css
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'neoclide/coc.nvim', {'do': 'yarn install --frozen-lockfile'}
 
 call plug#end()
 
+"coc prettier
+command! -nargs=0 Prettier :CocCommand prettier.formatFile
+
+"vue specific stuff
+let g:vim_vue_plugin_load_full_syntax = 1
+let g:vim_vue_plugin_use_typescript = 1
+let g:vim_vue_plugin_use_pug = 1
+
+let g:ale_fixers = {}
+let g:ale_fixers.javascript = ['eslint']
+let g:ale_fixers.typescript = ['eslint']
+let g:ale_fix_on_save = 1
+
+
 set viminfo='100,n$HOME/.vim/files/info/viminfo
-set termguicolors
+
+if exists('+termguicolors')
+  let &t_8f="\<Esc>[38;2;%lu;%lu;%lum"
+  let &t_8b="\<Esc>[48;2;%lu;%lu;%lum"
+  set termguicolors
+endif
+
+set guifont=Fira\ Code:h12
 
 " rust.vim option
 let g:autofmt_autosave = 1
@@ -49,7 +93,7 @@ let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files . -co - exclude-stand
 
 
 " basics
-colorscheme atom 
+colorscheme edge
 filetype plugin indent on
 syntax on 
 set number
@@ -67,6 +111,33 @@ set nowrap
 set colorcolumn=80
 set undodir=~/.vim/undodir
 set undofile
+
+function! s:goyo_enter()
+  if executable('tmux') && strlen($TMUX)
+    silent !tmux set status off
+    silent !tmux list-panes -F '\#F' | grep -q Z || tmux resize-pane -Z
+  endif
+  set noshowmode
+  set noshowcmd
+  set scrolloff=999
+  Limelight
+  " ...
+endfunction
+
+function! s:goyo_leave()
+  if executable('tmux') && strlen($TMUX)
+    silent !tmux set status on
+    silent !tmux list-panes -F '\#F' | grep -q Z && tmux resize-pane -Z
+  endif
+  set showmode
+  set showcmd
+  set scrolloff=5
+  Limelight!
+  " ...
+endfunction
+
+autocmd! User GoyoEnter nested call <SID>goyo_enter()
+autocmd! User GoyoLeave nested call <SID>goyo_leave()
 
 nnoremap <silent> H :call <SID>show_documentation()<CR>
 
@@ -87,6 +158,7 @@ function! s:DiffWithSaved()
 endfunction
 com! DiffSaved call s:DiffWithSaved()
 
+command! Q :q
 
 " movemnet with arrow keys around words
 map ^[0A <ESC>ki
@@ -134,6 +206,7 @@ nnoremap <C-n> :tabnext<CR>
 " opens new tab with startify
 nnoremap <S-t> :tabnew<CR>:Startify<CR>
 
+nnoremap <C-p> :GFiles<CR>
 nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
