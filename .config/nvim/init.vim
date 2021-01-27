@@ -14,27 +14,15 @@ Plug 'junegunn/fzf.vim'
 " vim features
 Plug 'mhinz/vim-startify'
 Plug 'flazz/vim-colorschemes'
-Plug 'norcalli/nvim-colorizer.lua'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'scrooloose/nerdcommenter'
 Plug 'airblade/vim-gitgutter'
-"Plug 'vimlab/split-term.vim'
-"Plug 'Xuyuanp/nerdtree-git-plugin'
-"Plug 'justinmk/vim-sneak'
-"Plug 'easymotion/vim-easymotion'
-
-"Plug 'chiel92/vim-autoformat'
 
 " syntax
-Plug 'othree/javascript-libraries-syntax.vim'
-Plug 'leafoftree/vim-vue-plugin'
+Plug 'posva/vim-vue'
 Plug 'digitaltoad/vim-pug'
 Plug 'leafgarland/typescript-vim'
-
-"Plug 'dnitro/vim-pug-complete'
-"Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
-"Plug 'scrooloose/syntastic'
 
 Plug 'dense-analysis/ale'
 
@@ -42,11 +30,6 @@ Plug 'dense-analysis/ale'
 Plug 'cespare/vim-toml'
 Plug 'stephpy/vim-yaml'
 Plug 'rust-lang/rust.vim'
-Plug 'rhysd/vim-clang-format'
-"Plug 'fatih/vim-go'
-Plug 'dag/vim-fish'
-Plug 'godlygeek/tabular'
-Plug 'plasticboy/vim-markdown' 
 
 " js/ts/vue/html/css
 Plug 'neoclide/coc.nvim', {'do': 'yarn install --frozen-lockfile'}
@@ -60,14 +43,15 @@ command! -nargs=0 Prettier :CocCommand prettier.formatFile
 let g:vim_vue_plugin_load_full_syntax = 1
 let g:vim_vue_plugin_use_typescript = 1
 let g:vim_vue_plugin_use_pug = 1
+let g:vim_vue_plugin_has_init_indent = 0
+let g:vim_vue_plugin_highlight_vue_keyword = 1
 
-let g:ale_fixers = {}
-let g:ale_fixers.javascript = ['eslint']
-let g:ale_fixers.typescript = ['eslint']
-let g:ale_fix_on_save = 1
+" ale settings
+"let g:ale_fixers = {}
+"let g:ale_fixers.javascript = ['eslint']
+"let g:ale_fixers.typescript = ['eslint']
+"let g:ale_fix_on_save = 1
 
-
-set viminfo='100,n$HOME/.vim/files/info/viminfo
 
 if exists('+termguicolors')
   let &t_8f="\<Esc>[38;2;%lu;%lu;%lum"
@@ -79,38 +63,32 @@ set guifont=Fira\ Code:h12
 
 " rust.vim option
 let g:autofmt_autosave = 1
+
 " enable tabline
 let g:airline#extensions#tabline#enabled = 1
-"let g:airline_theme='cool'
 let g:airline_theme='lucius'
-
-" ctrlp better fuzzy search 
-let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files . -co - exclude-standard', 'find %s -type f']
-"nmap <C-P> :FZF<CR>
-"let g:ctrlp_working_path_mode = 'ra'
-"let g:ctrlp_cmd='CtrlP :pwd '
-
 
 
 " basics
 colorscheme edge
-filetype plugin indent on
+"filetype plugin indent on
 syntax on 
 set number
 set incsearch
 set ignorecase
 set smartcase
 set nohlsearch
-set tabstop=4
+set tabstop=2
 set softtabstop=0
-set shiftwidth=4
-set expandtab
+set shiftwidth=2
+set noexpandtab
 set nobackup
 set noswapfile
 set nowrap
-set colorcolumn=80
+set colorcolumn=100
 set undodir=~/.vim/undodir
 set undofile
+set viminfo='100,n$HOME/.vim/files/info/viminfo
 
 function! s:goyo_enter()
   if executable('tmux') && strlen($TMUX)
@@ -177,9 +155,7 @@ vmap <C-x> x
 " cut with ctrl x in visual mode
 imap <C-v> <ESC>p
 " run makefile
-"noremap <C-m> :make<CR>
 
-"nnoremap <A-j> :m .+1<CR>==
 " This section allows me to Shift arrow key move things
 vnoremap <S-Down> :m '>+1<CR>gv=gv
 vnoremap <S-Up> :m '<-2<CR>gv=gv
@@ -188,14 +164,11 @@ nnoremap <S-Down> :m+<CR>
 inoremap <S-Up> <Esc>:m-2<CR>
 inoremap <S-Down> <Esc>:m+<CR>
 
-"map <C-f> :RustFmt<CR>
 " comment out selected lines
-"inoremap <C-i> :call NERDComment(0,"toggle")<CR>
 vnoremap <C-i> :call NERDComment(0,"toggle")<CR>
 map <C-i> :call NERDComment(0,"toggle")<CR>
 
 " map ctrl+s to write
-"map <C-s> =G :w<CR>
 map <C-s> :w<CR>
 inoremap <C-s> <c-o>:w<cr>
 
@@ -216,4 +189,4 @@ nnoremap <C-H> <C-W><C-H>
 nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references
+nmap <silent> gr <Plug>(coc-references)
