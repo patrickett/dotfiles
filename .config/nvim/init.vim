@@ -23,7 +23,6 @@ Plug 'airblade/vim-gitgutter'
 Plug 'posva/vim-vue'
 Plug 'digitaltoad/vim-pug'
 Plug 'leafgarland/typescript-vim'
-
 Plug 'dense-analysis/ale'
 
 " Syntactic language support
@@ -45,6 +44,8 @@ let g:vim_vue_plugin_use_typescript = 1
 let g:vim_vue_plugin_use_pug = 1
 let g:vim_vue_plugin_has_init_indent = 0
 let g:vim_vue_plugin_highlight_vue_keyword = 1
+
+let g:coc_global_extensions = ['coc-tailwindcss', 'coc-snippets', 'coc-rust-analyzer', 'coc-prettier', 'coc-pairs', 'coc-eslint', "coc-vetur", "coc-tsserver", "coc-json"]
 
 " ale settings
 "let g:ale_fixers = {}
