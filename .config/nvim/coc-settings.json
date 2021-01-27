@@ -9,6 +9,5 @@
   ],
   "prettier.eslintIntegration": true,
   "eslint.autoFixOnSave": true,
-	"tailwindCSS.htmlLanguages":"
   "tailwindCSS.emmetCompletions": true
 }
