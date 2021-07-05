@@ -2,9 +2,13 @@ set shell=/bin/bash
 
 call plug#begin('~/.config/nvim/bundle')
 
-"Center text
-Plug 'junegunn/goyo.vim'
-Plug 'junegunn/limelight.vim' 
+Plug 'mattn/emmet-vim'
+
+" NERDTREE fm
+Plug 'preservim/nerdtree'
+
+"sneak
+Plug 'justinmk/vim-sneak'
 
 " fzf and file search
 Plug 'airblade/vim-rooter'
@@ -16,14 +20,17 @@ Plug 'mhinz/vim-startify'
 Plug 'flazz/vim-colorschemes'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-Plug 'scrooloose/nerdcommenter'
 Plug 'airblade/vim-gitgutter'
 
+" comments
+Plug 'tpope/vim-commentary'
+
 " syntax
-Plug 'posva/vim-vue'
-Plug 'digitaltoad/vim-pug'
 Plug 'leafgarland/typescript-vim'
-Plug 'dense-analysis/ale'
+Plug 'MaxMEllon/vim-jsx-pretty'
+"Plug 'posva/vim-vue'
+"Plug 'digitaltoad/vim-pug'
+" Plug 'dense-analysis/ale'
 
 " Syntactic language support
 Plug 'cespare/vim-toml'
@@ -47,12 +54,9 @@ let g:vim_vue_plugin_highlight_vue_keyword = 1
 
 let g:coc_global_extensions = ['coc-tailwindcss', 'coc-snippets', 'coc-rust-analyzer', 'coc-prettier', 'coc-pairs', 'coc-eslint', "coc-vetur", "coc-tsserver", "coc-json"]
 
-" ale settings
-"let g:ale_fixers = {}
-"let g:ale_fixers.javascript = ['eslint']
-"let g:ale_fixers.typescript = ['eslint']
-"let g:ale_fix_on_save = 1
-
+" comment out selected lines
+vnoremap <C-i> :Commentary<CR>
+map <C-i> :Commentary<CR>
 
 if exists('+termguicolors')
   let &t_8f="\<Esc>[38;2;%lu;%lu;%lum"
@@ -62,17 +66,28 @@ endif
 
 set guifont=Fira\ Code:h12
 
+set mouse=a " Enable mouse usage (all modes) in terminals
+
 " rust.vim option
-let g:autofmt_autosave = 1
+let g:rustfmt_autosave = 1
+let g:rustfmt_emit_files = 1
+let g:rustfmt_fail_silently = 0
 
 " enable tabline
 let g:airline#extensions#tabline#enabled = 1
 let g:airline_theme='lucius'
 
 
+" fzf keybind
+nmap <C-f> :Rg <CR>
+
+" You can optionally remove the filename from searches
+" command! -bang -nargs=* Rg call fzf#vim#grep("rg --column --line-number --no-heading --color=always --smart-case ".shellescape(<q-args>), 1, {'options': '--delimiter : --nth 4..'}, <bang>0)
+
 " basics
-colorscheme edge
+colorscheme angr
 "filetype plugin indent on
+filetype plugin on
 syntax on 
 set number
 set incsearch
@@ -90,33 +105,6 @@ set colorcolumn=100
 set undodir=~/.vim/undodir
 set undofile
 set viminfo='100,n$HOME/.vim/files/info/viminfo
-
-function! s:goyo_enter()
-  if executable('tmux') && strlen($TMUX)
-    silent !tmux set status off
-    silent !tmux list-panes -F '\#F' | grep -q Z || tmux resize-pane -Z
-  endif
-  set noshowmode
-  set noshowcmd
-  set scrolloff=999
-  Limelight
-  " ...
-endfunction
-
-function! s:goyo_leave()
-  if executable('tmux') && strlen($TMUX)
-    silent !tmux set status on
-    silent !tmux list-panes -F '\#F' | grep -q Z && tmux resize-pane -Z
-  endif
-  set showmode
-  set showcmd
-  set scrolloff=5
-  Limelight!
-  " ...
-endfunction
-
-autocmd! User GoyoEnter nested call <SID>goyo_enter()
-autocmd! User GoyoLeave nested call <SID>goyo_leave()
 
 nnoremap <silent> H :call <SID>show_documentation()<CR>
 
@@ -139,8 +127,26 @@ com! DiffSaved call s:DiffWithSaved()
 
 command! Q :q
 
+" NERDTREE Toggle
+nnoremap <C-e> :NERDTreeToggle<CR>
+
+" Exit Vim if NERDTree is the only window left.
+autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() |
+    \ quit | endif
+
+" close nerdtree when file selected
+let g:NERDTreeQuitOnOpen = 1
+
+" disable matchparen
+let g:loaded_matchparen=1
+
+
+" Remap keys for applying codeAction to the current buffer.
+"nmap <> <Plug>(coc-codeaction)
+nmap <C-a> :CocAction <CR>
+
 " movemnet with arrow keys around words
-map ^[0A <ESC>ki
+"map ^[0A <ESC>ki
 " quit with ctrl + q
 map <C-q> :quit<CR>
 " map ctrl a to begining of line insert mode
@@ -148,14 +154,13 @@ imap <C-a> <esc>0i
 " move cursor to bottom of screen
 noremap <C-b> G$<CR>
 " move cursor to top of screen
-noremap <C-t> gg<CR>
+"noremap <C-t> gg<CR>
 "copy with ctrl c in visual mode
 vmap <C-c> y
 " cut with ctrl x in visual mode
 vmap <C-x> x
 " cut with ctrl x in visual mode
 imap <C-v> <ESC>p
-" run makefile
 
 " This section allows me to Shift arrow key move things
 vnoremap <S-Down> :m '>+1<CR>gv=gv
@@ -164,10 +169,6 @@ nnoremap <S-Up> :m-2<CR>
 nnoremap <S-Down> :m+<CR>
 inoremap <S-Up> <Esc>:m-2<CR>
 inoremap <S-Down> <Esc>:m+<CR>
-
-" comment out selected lines
-vnoremap <C-i> :call NERDComment(0,"toggle")<CR>
-map <C-i> :call NERDComment(0,"toggle")<CR>
 
 " map ctrl+s to write
 map <C-s> :w<CR>
