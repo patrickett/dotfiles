@@ -162,13 +162,17 @@ vmap <C-x> x
 " cut with ctrl x in visual mode
 imap <C-v> <ESC>p
 
+nnoremap <C-z> :undo<CR>
+
+
+
 " This section allows me to Shift arrow key move things
-vnoremap <S-Down> :m '>+1<CR>gv=gv
-vnoremap <S-Up> :m '<-2<CR>gv=gv
-nnoremap <S-Up> :m-2<CR>
-nnoremap <S-Down> :m+<CR>
-inoremap <S-Up> <Esc>:m-2<CR>
-inoremap <S-Down> <Esc>:m+<CR>
+vnoremap <A-Down> :m '>+1<CR>gv=gv
+vnoremap <A-Up> :m '<-2<CR>gv=gv
+nnoremap <A-Up> :m-2<CR>
+nnoremap <A-Down> :m+<CR>
+inoremap <A-Up> <Esc>:m-2<CR>
+inoremap <A-Down> <Esc>:m+<CR>
 
 " map ctrl+s to write
 map <C-s> :w<CR>
